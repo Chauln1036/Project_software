@@ -89,13 +89,13 @@ BizFlow/
 ### Backend (Flask-CleanArchitecture)
 
 - **Framework**: Python Flask với Clean Architecture
-- **Database**: MySQL (transactional), PostgreSQL (analytics/AI)
+- **Database**: SQL Server (MSSQL - từ file .env của thầy)
 - **ORM**: SQLAlchemy
-- **AI Integration**:
+- **AI Integration** (sẽ triển khai):
   - RAG: ChromaDB, text-embedding-3-small
   - LLM: OpenAI API / Gemini
   - Speech-to-Text: Google Speech-to-Text / Whisper
-- **Caching**: Redis
+- **Caching**: Redis (tương lai)
 - **API Documentation**: Swagger/OpenAPI
 
 ### Frontend (wireframe_bizflow)
@@ -116,9 +116,8 @@ BizFlow/
 ### Backend
 
 - Python 3.8+
-- MySQL 8.0+
-- PostgreSQL 13+
-- Redis (optional)
+- SQL Server (MSSQL) - đã được cấu hình trong file .env của thầy
+- Redis (tương lai)
 
 ### Frontend
 
@@ -134,28 +133,20 @@ BizFlow/
 
 ### 1. Chuẩn bị Database
 
-**MySQL Setup với Docker:**
+**SQL Server Setup (theo hướng dẫn của thầy):**
 
 ```bash
-# Pull MySQL image
-docker pull mysql:8.0
+# Pull SQL Server image
+docker pull mcr.microsoft.com/mssql/server:2025-latest
 
-# Run MySQL container
-docker run --name bizflow-mysql -e MYSQL_ROOT_PASSWORD=rootpassword -e MYSQL_DATABASE=bizflow_db -p 3306:3306 -d mysql:8.0
+# Run SQL Server container
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Aa123456" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2025-latest
 
 # Kiểm tra container
 docker ps
 ```
 
-**PostgreSQL Setup với Docker (cho AI data):**
-
-```bash
-# Pull PostgreSQL image
-docker pull postgres:13
-
-# Run PostgreSQL container
-docker run --name bizflow-postgres -e POSTGRES_PASSWORD=postgres -e POSTGRES_DB=bizflow_ai -p 5432:5432 -d postgres:13
-```
+**Lưu ý**: Database đã được cấu hình trong file `.env` của thầy và không được sửa đổi.
 
 ### 2. Backend Setup
 
