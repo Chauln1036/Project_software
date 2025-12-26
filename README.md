@@ -143,20 +143,24 @@ BizFlow/
 
 ### 1. Chuẩn bị Database
 
-**SQL Server Setup (theo hướng dẫn của thầy):**
+**SQL Server đã được setup sẵn với dữ liệu demo:**
 
 ```bash
-# Pull SQL Server image
-docker pull mcr.microsoft.com/mssql/server:2025-latest
-
-# Run SQL Server container
-docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Aa123456" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2025-latest
-
-# Kiểm tra container
+# Kiểm tra SQL Server container
 docker ps
+
+# Nếu chưa có, tạo container:
+docker run -e "ACCEPT_EULA=Y" -e "MSSQL_SA_PASSWORD=Aa123456" -p 1433:1433 --name sql1 --hostname sql1 -d mcr.microsoft.com/mssql/server:2025-latest
 ```
 
-**Lưu ý**: Database đã được cấu hình trong file `.env` của thầy và không được sửa đổi.
+**Database đã có sẵn dữ liệu demo:**
+
+- ✅ 4 tài khoản người dùng (admin, owner, employee)
+- ✅ 1 doanh nghiệp (Cửa hàng Vật liệu Xây dựng An Phát)
+- ✅ 16 sản phẩm (xi măng, gạch, cát đá, sắt thép, ống nước, sơn, công cụ)
+- ✅ 8 khách hàng (công ty và cá nhân)
+- ✅ 15 đơn hàng mẫu
+- ✅ Tồn kho đầy đủ
 
 ### 2. Backend Setup
 
@@ -221,6 +225,22 @@ npm run dev
 ```
 
 Frontend sẽ chạy tại: http://localhost:3000
+
+## 🎯 Tài khoản Demo
+
+Sau khi cài đặt và chạy hệ thống, bạn có thể đăng nhập với các tài khoản demo sau:
+
+### Backend API Demo Accounts:
+
+- **Employee**: username: `employee`, password: `demo123`
+- **Owner**: username: `owner`, password: `demo123`
+- **Admin**: username: `admin`, password: `demo123`
+
+### Cách đăng nhập:
+
+1. Mở http://localhost:3000
+2. Nhập tên đăng nhập và mật khẩu từ danh sách trên
+3. Click "Đăng nhập"
 
 ### 4. Mobile App (Flutter)
 
