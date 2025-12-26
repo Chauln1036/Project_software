@@ -81,6 +81,15 @@ BizFlow/
 │   │   └── lib/              # Utilities
 │   └── package.json
 │
+├── bizflow_mobile/             # Mobile App (Flutter)
+│   ├── lib/
+│   │   ├── models/            # Data models
+│   │   ├── providers/         # State management
+│   │   ├── screens/           # UI screens
+│   │   ├── services/          # API calls
+│   │   └── main.dart          # App entry point
+│   └── pubspec.yaml
+│
 └── README.md
 ```
 
@@ -106,10 +115,11 @@ BizFlow/
 - **Charts**: Recharts
 - **Icons**: Lucide React
 
-### Mobile (Future)
+### Mobile (bizflow_mobile)
 
 - **Framework**: Flutter
-- **Features**: Push Notifications
+- **State Management**: Provider
+- **Features**: Push Notifications, Authentication, Dashboard
 
 ## 💻 Yêu cầu hệ thống
 
@@ -212,11 +222,11 @@ npm run dev
 
 Frontend sẽ chạy tại: http://localhost:3000
 
-### 4. Mobile App (Flutter - Tương lai)
+### 4. Mobile App (Flutter)
 
 ```bash
-# Di chuyển vào thư mục mobile (khi hoàn thành)
-cd mobile_app
+# Di chuyển vào thư mục mobile
+cd bizflow_mobile
 
 # Cài đặt dependencies
 flutter pub get
