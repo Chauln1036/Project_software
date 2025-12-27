@@ -93,6 +93,6 @@ Distributed under the MIT License. See `LICENSE` for more information.
 
 ## 📞 Liên hệ
 
-Châu Long - chau.long@example.com
+Châu Ln - lengocchau15072006@gmail.com
 
 Project Link: [https://github.com/Chauln1036/Project_software](https://github.com/Chauln1036/Project_software)
