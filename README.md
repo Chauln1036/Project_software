@@ -43,7 +43,7 @@ Một nền tảng quản lý kinh doanh toàn diện được xây dựng cho c
 - **Next.js 14**: React framework với App Router
 - **TypeScript**: Type safety toàn diện
 - **Tailwind CSS**: Utility-first CSS framework
-- **Roboto Font**: Font chữ hỗ trợ tiếng Việt hoàn hảo
+- **ESLint**: Code quality & consistency
 
 ### Backend
 
@@ -54,88 +54,82 @@ Một nền tảng quản lý kinh doanh toàn diện được xây dựng cho c
 
 ### Database
 
-- **SQL Server**: Primary database
-- **PostgreSQL**: Analytics & AI data
-- **MySQL**: Alternative database
-- **Redis**: Caching & session storage
-
-### DevOps
-
-- **Docker**: Containerization
-- **Docker Compose**: Multi-service orchestration
+- **SQLite**: Primary database (development)
+- **MySQL/PostgreSQL**: Production databases
+- **Docker**: Containerized database services
 
 ## 📋 Yêu Cầu Hệ Thống
 
 - **Node.js**: 18.17+
 - **Python**: 3.8+
-- **Docker**: Latest version
+- **Docker**: Latest version (optional)
 - **Git**: Latest version
 
 ## 🚀 Cài Đặt & Chạy
 
-### 1. Clone Repository
+### 1. Chuẩn Bị Môi Trường
 
 ```bash
-git clone https://github.com/yourusername/bizflow.git
-cd bizflow
+# Clone project
+git clone <repository-url>
+cd project_bizflow
 ```
 
-### 2. Chạy Demo (Frontend Only)
+### 2. Cấu Hình Database
+
+**Quan trọng:** BizFlow yêu cầu cấu hình database rõ ràng.
 
 ```bash
-cd wireframe_bizflow
-npm install
-npm run dev
+# Chạy setup script để chọn loại database
+cd bizflow-project
+python setup.py
 ```
 
-Truy cập: http://localhost:3000
+**Lựa chọn:**
 
-**Tài khoản demo:**
+- SQLite (đơn giản nhất - khuyến nghị)
+- MySQL/PostgreSQL với Docker
+- MySQL/PostgreSQL local
 
-- Admin: `admin` / `demo123`
-- Owner: `owner` / `demo123`
-- Employee: `employee` / `demo123`
-
-### 3. Chạy Full Stack (Với Database)
-
-#### Khởi động Database
+### 3. Khởi Động Database (nếu dùng Docker)
 
 ```bash
+cd bizflow-project/docker
 docker-compose up -d
 ```
 
-#### Chạy Backend APIs
+### 4. Chạy Backend API
 
 ```bash
-# Terminal 1 - Auth API
-cd Flask-CleanArchitecture/src
-python auth_app.py
-
-# Terminal 2 - Product API
-python product_app.py
-
-# Terminal 3 - Order API
-python order_app.py
+cd bizflow-project/backend
+python app.py
 ```
 
-#### Chạy Frontend
+**API chạy tại:** http://localhost:9999
+
+### 5. Chạy Frontend Web
 
 ```bash
-cd wireframe_bizflow
+cd bizflow-project/frontend
 npm install
 npm run dev
 ```
 
-### 4. Khởi Tạo Dữ Liệu Demo
+**Web app chạy tại:** http://localhost:3000
 
-```bash
-cd Flask-CleanArchitecture/src
-python seed_demo_data.py
-```
+## 🔐 Tài Khoản Demo
+
+Sau khi setup xong, sử dụng tài khoản sau để đăng nhập:
+
+| Username   | Password | Vai Trò        |
+| ---------- | -------- | -------------- |
+| admin      | demo123  | Administrator  |
+| nguyenvana | demo123  | Business Owner |
+| hoangd     | demo123  | Employee       |
 
 ## 📖 API Documentation
 
-### Authentication API (Port 9997)
+### Authentication
 
 ```
 POST /api/auth/login
@@ -143,7 +137,7 @@ POST /api/auth/register
 POST /api/auth/logout
 ```
 
-### Product API (Port 9998)
+### Products
 
 ```
 GET  /api/products
@@ -152,7 +146,7 @@ PUT  /api/products/:id
 DELETE /api/products/:id
 ```
 
-### Order API (Port 9996)
+### Orders
 
 ```
 GET  /api/orders
@@ -161,123 +155,77 @@ PUT  /api/orders/:id
 DELETE /api/orders/:id
 ```
 
+### Employees
+
+```
+GET  /api/employees
+POST /api/employees
+PUT  /api/employees/:id
+DELETE /api/employees/:id
+```
+
 ## 🗄️ Database Schema
 
 ### Core Tables
 
-- `bizflow_user`: Thông tin người dùng
-- `bizflow_business`: Thông tin doanh nghiệp
-- `bizflow_product`: Danh mục sản phẩm
-- `bizflow_order`: Đơn hàng
-- `bizflow_order_item`: Chi tiết đơn hàng
-- `bizflow_customer`: Thông tin khách hàng
-- `bizflow_inventory`: Tồn kho
+- `users`: Thông tin người dùng & authentication
+- `business`: Thông tin doanh nghiệp
+- `products`: Danh mục sản phẩm
+- `orders`: Đơn hàng
+- `order_items`: Chi tiết đơn hàng
+- `customers`: Thông tin khách hàng
+- `employees`: Quản lý nhân sự
 
-### Analytics Tables
+## 🔧 Development
 
-- `bizflow_inventory_transaction`: Lịch sử nhập xuất
-- `bizflow_business_settings`: Cài đặt hệ thống
+### Project Structure
 
-## 🔧 Cấu Hình
+```
+bizflow-project/
+├── backend/                    # Flask REST API
+│   ├── app.py                 # Main Flask application
+│   ├── config.py              # Database & environment config
+│   ├── api/                   # API routes & controllers
+│   ├── domain/                # Business logic & models
+│   └── infrastructure/        # Database & external services
+├── frontend/                  # Next.js Web Application
+│   ├── src/
+│   │   ├── app/              # Next.js App Router
+│   │   ├── components/       # React components
+│   │   ├── lib/              # Utilities & API client
+│   │   └── types/            # TypeScript definitions
+│   └── package.json
+├── mobile/                    # Flutter Mobile App
+└── docker/                    # Infrastructure & Databases
+```
 
-### Environment Variables
+### Build Commands
 
 ```bash
-# Frontend (.env.local)
-NEXT_PUBLIC_API_URL=http://localhost:9997
-NEXT_PUBLIC_AUTH_API_URL=http://localhost:9997
-NEXT_PUBLIC_PRODUCT_API_URL=http://localhost:9998
-NEXT_PUBLIC_ORDER_API_URL=http://localhost:9996
+# Frontend build check
+cd bizflow-project/frontend
+npm run build
 
-# Backend (config.py)
-DATABASE_URL=mssql+pyodbc://bizflow_user:bizflow_pass@localhost:1433/bizflow_db?driver=ODBC+Driver+17+for+SQL+Server
+# Backend test
+cd bizflow-project/backend
+python -c "from config import Config; print('Config OK')"
 ```
 
-### Docker Services
+## 🚀 Production Deployment
 
-```yaml
-# docker-compose.yml
-mysql:
-  image: mysql:8.0
-  ports: ["3306:3306"]
-
-postgres:
-  image: postgres:15
-  ports: ["5432:5432"]
-
-mssql:
-  image: mcr.microsoft.com/mssql/server:2022-latest
-  ports: ["1433:1433"]
-
-redis:
-  image: redis:7-alpine
-  ports: ["6379:6379"]
-```
-
-## 🚀 Triển Khai Production
-
-### Render Deployment
-
-#### 1. Database (PostgreSQL)
-
-- Tạo database trên Render
-- Copy connection URL
-
-#### 2. Backend (Flask)
+### Docker Deployment
 
 ```bash
-# render.yaml
-services:
-  - type: web
-    name: bizflow-backend
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python src/app.py
-    envVars:
-      - key: DATABASE_URL
-        value: postgresql://...
-      - key: FLASK_ENV
-        value: production
+# Build & run toàn bộ hệ thống
+cd bizflow-project/docker
+docker-compose -f docker-compose.prod.yml up -d
 ```
 
-#### 3. Frontend (Next.js)
+### Manual Deployment
 
-```bash
-# render.yaml
-services:
-  - type: web
-    name: bizflow-frontend
-    env: node
-    buildCommand: npm run build && npm run export
-    staticPublishPath: out
-    envVars:
-      - key: NEXT_PUBLIC_API_URL
-        value: https://bizflow-backend.onrender.com
-```
-
-### Domain Setup
-
-- Custom domain trên Render
-- SSL certificate tự động
-- CDN và caching
-
-## 📱 Screenshots
-
-### Login Page
-
-![Login](screenshots/login.png)
-
-### Admin Dashboard
-
-![Admin Dashboard](screenshots/admin-dashboard.png)
-
-### Product Management
-
-![Product Management](screenshots/products.png)
-
-### Order Management
-
-![Order Management](screenshots/orders.png)
+1. **Database**: Chạy MySQL/PostgreSQL server
+2. **Backend**: Deploy Flask app với Gunicorn
+3. **Frontend**: Build Next.js và serve static files
 
 ## 🤝 Đóng Góp
 
@@ -287,29 +235,10 @@ services:
 4. Push to branch: `git push origin feature/TinhNangMoi`
 5. Tạo Pull Request
 
-### Coding Standards
-
-- **Frontend**: ESLint, Prettier
-- **Backend**: Black, Flake8
-- **Git**: Conventional commits
-
 ## 📄 Giấy Phép
 
-Dự án này được phân phối dưới giấy phép MIT. Xem file `LICENSE` để biết thêm chi tiết.
-
-## 👥 Tác Giả
-
-- **Developer**: [Your Name]
-- **Email**: your.email@example.com
-- **GitHub**: https://github.com/yourusername
-
-## 🙏 Lời Cảm Ơn
-
-- **Next.js Team**: Framework tuyệt vời
-- **Tailwind CSS**: Styling system mạnh mẽ
-- **Flask Community**: Web framework Python
-- **Docker**: Containerization platform
+Dự án này được phân phối dưới giấy phép MIT.
 
 ---
 
-**BizFlow** - Giải pháp số hóa cho hộ kinh doanh Việt Nam! 🇻🇳
+**BizFlow** - Giải pháp số hóa cho hộ kinh doanh Việt Nam! 🇻🇳 🚀
