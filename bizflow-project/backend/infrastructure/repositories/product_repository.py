@@ -1,6 +1,6 @@
 from domain.models.product import Product
 from infrastructure.models.product_model import ProductModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 
 class ProductRepository:

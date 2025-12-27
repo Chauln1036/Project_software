@@ -1,6 +1,6 @@
 from domain.models.inventory import Inventory
 from infrastructure.models.inventory_model import InventoryModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 
 class InventoryRepository:

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from infrastructure.models.order_model import OrderModel
 from infrastructure.models.order_item_model import OrderItemModel
 from datetime import datetime

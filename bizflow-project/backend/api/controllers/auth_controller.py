@@ -3,7 +3,7 @@ import bcrypt
 from flask import Blueprint, request, jsonify, current_app
 from datetime import datetime, timedelta
 from infrastructure.models.user_model import UserModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from domain.models.user import User, UserRole
 
 auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')

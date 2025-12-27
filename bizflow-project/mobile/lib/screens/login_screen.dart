@@ -3,20 +3,19 @@ import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({super.key});
-
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  _LoginScreenState createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  bool _isLogin = true;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
+    final authProvider = Provider.of<AuthProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -27,38 +26,28 @@ class _LoginScreenState extends State<LoginScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                // Logo
-                const Icon(
-                  Icons.business,
-                  size: 80,
-                  color: Colors.blue,
-                ),
-                const SizedBox(height: 16),
-
-                // Title
-                const Text(
+                Text(
                   'BizFlow',
                   style: TextStyle(
                     fontSize: 32,
                     fontWeight: FontWeight.bold,
-                    color: Colors.blue,
+                    color: Theme.of(context).primaryColor,
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const Text(
-                  'Nền tảng quản lý kinh doanh',
+                SizedBox(height: 8),
+                Text(
+                  'Quản lý kinh doanh thông minh',
                   style: TextStyle(
                     fontSize: 16,
-                    color: Colors.grey,
+                    color: Colors.grey[600],
                   ),
                   textAlign: TextAlign.center,
                 ),
-                const SizedBox(height: 48),
-
-                // Username field
+                SizedBox(height: 48),
                 TextFormField(
                   controller: _usernameController,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Tên đăng nhập',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.person),
@@ -70,17 +59,15 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 16),
-
-                // Password field
+                SizedBox(height: 16),
                 TextFormField(
                   controller: _passwordController,
-                  obscureText: true,
-                  decoration: const InputDecoration(
+                  decoration: InputDecoration(
                     labelText: 'Mật khẩu',
                     border: OutlineInputBorder(),
                     prefixIcon: Icon(Icons.lock),
                   ),
+                  obscureText: true,
                   validator: (value) {
                     if (value?.isEmpty ?? true) {
                       return 'Vui lòng nhập mật khẩu';
@@ -88,55 +75,31 @@ class _LoginScreenState extends State<LoginScreen> {
                     return null;
                   },
                 ),
-                const SizedBox(height: 24),
-
-                // Login/Register button
-                Consumer<AuthProvider>(
-                  builder: (context, auth, _) {
-                    return ElevatedButton(
-                      onPressed: auth.isLoading ? null : _submit,
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(vertical: 16),
-                        backgroundColor: Colors.blue,
-                      ),
-                      child: auth.isLoading
-                          ? const CircularProgressIndicator(color: Colors.white)
-                          : Text(_isLogin ? 'Đăng nhập' : 'Đăng ký'),
-                    );
-                  },
-                ),
-                const SizedBox(height: 16),
-
-                // Toggle between login/register
-                TextButton(
-                  onPressed: () {
-                    setState(() {
-                      _isLogin = !_isLogin;
-                    });
-                  },
-                  child: Text(
-                    _isLogin
-                        ? 'Chưa có tài khoản? Đăng ký'
-                        : 'Đã có tài khoản? Đăng nhập',
-                    style: const TextStyle(color: Colors.blue),
+                SizedBox(height: 24),
+                ElevatedButton(
+                  onPressed: authProvider.isLoading
+                      ? null
+                      : () async {
+                          if (_formKey.currentState?.validate() ?? false) {
+                            final success = await authProvider.login(
+                              _usernameController.text,
+                              _passwordController.text,
+                            );
+                            if (success) {
+                              Navigator.pushReplacementNamed(context, '/dashboard');
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(content: Text('Đăng nhập thất bại')),
+                              );
+                            }
+                          }
+                        },
+                  child: authProvider.isLoading
+                      ? CircularProgressIndicator()
+                      : Text('Đăng nhập'),
+                  style: ElevatedButton.styleFrom(
+                    padding: EdgeInsets.symmetric(vertical: 16),
                   ),
-                ),
-
-                // Demo accounts
-                const SizedBox(height: 32),
-                const Text(
-                  'Tài khoản demo:',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Colors.grey,
-                  ),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(height: 8),
-                const Text(
-                  'Employee: employee/demo123\nOwner: owner/demo123',
-                  style: TextStyle(color: Colors.grey, fontSize: 12),
-                  textAlign: TextAlign.center,
                 ),
               ],
             ),
@@ -144,37 +107,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ),
       ),
     );
-  }
-
-  Future<void> _submit() async {
-    if (!_formKey.currentState!.validate()) return;
-
-    final auth = Provider.of<AuthProvider>(context, listen: false);
-
-    try {
-      if (_isLogin) {
-        await auth.login(
-          _usernameController.text,
-          _passwordController.text,
-        );
-      } else {
-        // For demo purposes, we'll just login with the provided credentials
-        await auth.login(
-          _usernameController.text,
-          _passwordController.text,
-        );
-      }
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Lỗi: ${e.toString()}')),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    _usernameController.dispose();
-    _passwordController.dispose();
-    super.dispose();
   }
 }

@@ -10,7 +10,7 @@ from sqlalchemy import Column, Integer, String, DateTime
 from infrastructure.databases import Base
 from sqlalchemy.orm import Session
 from infrastructure.models.todo_model import TodoModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 load_dotenv()
 
 class TodoRepository(ITodoRepository):

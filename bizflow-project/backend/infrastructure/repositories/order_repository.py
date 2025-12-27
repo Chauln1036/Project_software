@@ -1,7 +1,7 @@
 from domain.models.order import Order, OrderItem
 from infrastructure.models.order_model import OrderModel
 from infrastructure.models.order_item_model import OrderItemModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 from datetime import datetime
 

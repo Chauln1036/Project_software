@@ -8,12 +8,8 @@ class NotificationService {
     const AndroidInitializationSettings androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    const DarwinInitializationSettings iosSettings =
-        DarwinInitializationSettings();
-
     const InitializationSettings settings = InitializationSettings(
       android: androidSettings,
-      iOS: iosSettings,
     );
 
     await _notificationsPlugin.initialize(settings);
@@ -22,46 +18,27 @@ class NotificationService {
   static Future<void> showNotification({
     required String title,
     required String body,
-    String? payload,
+    int id = 0,
   }) async {
     const AndroidNotificationDetails androidDetails =
         AndroidNotificationDetails(
       'bizflow_channel',
       'BizFlow Notifications',
-      channelDescription: 'Thông báo từ BizFlow',
       importance: Importance.high,
       priority: Priority.high,
     );
 
-    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails();
-
     const NotificationDetails details = NotificationDetails(
       android: androidDetails,
-      iOS: iosDetails,
     );
 
-    await _notificationsPlugin.show(
-      DateTime.now().millisecondsSinceEpoch ~/ 1000,
-      title,
-      body,
-      details,
-      payload: payload,
-    );
+    await _notificationsPlugin.show(id, title, body, details);
   }
 
-  static Future<void> showOrderNotification(String orderInfo) async {
+  static Future<void> showOrderNotification(String customerName, double amount) async {
     await showNotification(
       title: 'Đơn hàng mới',
-      body: 'Có đơn hàng mới: $orderInfo',
-      payload: 'order',
-    );
-  }
-
-  static Future<void> showDraftOrderNotification() async {
-    await showNotification(
-      title: 'Đơn nháp AI',
-      body: 'AI đã tạo đơn hàng nháp. Vui lòng kiểm tra.',
-      payload: 'draft_order',
+      body: 'Khách hàng $customerName đặt hàng: ${amount.toStringAsFixed(0)} VND',
     );
   }
 }

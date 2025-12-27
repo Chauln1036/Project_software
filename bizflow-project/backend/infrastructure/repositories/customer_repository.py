@@ -1,6 +1,6 @@
 from domain.models.customer import Customer
 from infrastructure.models.customer_model import CustomerModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 
 class CustomerRepository:

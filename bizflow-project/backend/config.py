@@ -7,7 +7,7 @@ class Config:
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a_default_secret_key'
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'sqlite:///bizflow.db'
+    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://bizflow_user:bizflow_pass@127.0.0.1:3306/bizflow_db'
     CORS_HEADERS = 'Content-Type'
 
 class DevelopmentConfig(Config):
@@ -15,16 +15,14 @@ class DevelopmentConfig(Config):
     DEBUG = True
     DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://bizflow_user:bizflow_pass@127.0.0.1:3306/bizflow_db'
 
-
 class TestingConfig(Config):
     """Testing configuration."""
     TESTING = True
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB'
-
+    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://bizflow_user:bizflow_pass@127.0.0.1:3306/bizflow_db'
 
 class ProductionConfig(Config):
     """Production configuration."""
-    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mssql+pymssql://sa:Aa%40123456@127.0.0.1:1433/FlaskApiDB'
+    DATABASE_URI = os.environ.get('DATABASE_URI') or 'mysql+pymysql://bizflow_user:bizflow_pass@127.0.0.1:3306/bizflow_db'
 
     
 template = {

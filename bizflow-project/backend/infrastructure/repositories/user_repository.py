@@ -3,7 +3,7 @@ from domain.models.user import User
 from typing import List, Optional
 from sqlalchemy.orm import Session
 from infrastructure.models.user_model import UserModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from datetime import datetime
 
 class UserRepository(IUserRepository):

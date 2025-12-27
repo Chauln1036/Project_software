@@ -1,6 +1,6 @@
 from domain.models.draft_order import DraftOrder
 from infrastructure.models.draft_order_model import DraftOrderModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 from datetime import datetime
 

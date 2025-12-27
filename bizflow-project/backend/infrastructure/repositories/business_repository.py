@@ -1,6 +1,6 @@
 from domain.models.business import Business
 from infrastructure.models.business_model import BusinessModel
-from infrastructure.databases.mssql import session
+from infrastructure.databases.mysql import session
 from typing import List, Optional
 
 class BusinessRepository:

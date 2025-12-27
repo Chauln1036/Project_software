@@ -1,128 +1,165 @@
 # BizFlow Mobile App
 
-Ứng dụng di động cho nền tảng BizFlow - giải pháp quản lý kinh doanh toàn diện cho hộ kinh doanh tại Việt Nam.
+Ứng dụng di động cho hệ thống quản lý kinh doanh BizFlow, giúp nhân viên và chủ cửa hàng quản lý đơn hàng, khách hàng và theo dõi doanh thu mọi lúc mọi nơi.
 
 ## 🚀 Tính năng
 
-### 👤 Nhân viên (Employee)
+### 👤 Quản lý tài khoản
 
-- ✅ Đăng nhập hệ thống
-- ✅ Nhận thông báo thời gian thực
-- ✅ Xem dashboard cơ bản
-- 🔄 Tạo đơn hàng (đang phát triển)
+- Đăng nhập/Đăng xuất an toàn
+- Lưu trữ thông tin đăng nhập
+- Phân quyền theo vai trò (Admin, Owner, Employee)
 
-### 👨‍💼 Chủ cửa hàng (Owner)
+### 📦 Quản lý đơn hàng
 
-- ✅ Tất cả quyền của Nhân viên
-- 🔄 Quản lý sản phẩm, khách hàng, báo cáo (đang phát triển)
+- Xem danh sách đơn hàng
+- Tạo đơn hàng mới
+- Theo dõi trạng thái đơn hàng
+- Xem chi tiết đơn hàng
 
-### 🤖 Tính năng AI
+### 👥 Quản lý khách hàng
 
-- 🔄 Nhận thông báo đơn hàng nháp từ AI (đang phát triển)
-- 🔄 Xử lý giọng nói (đang phát triển)
+- Danh sách khách hàng
+- Thông tin liên hệ
+- Lịch sử mua hàng
+
+### 📊 Thống kê & Báo cáo
+
+- Doanh thu theo ngày/tháng
+- Số lượng đơn hàng
+- Báo cáo tổng quan
 
 ## 🛠 Công nghệ sử dụng
 
-- **Framework**: Flutter
-- **State Management**: Provider
-- **Networking**: HTTP package
-- **Notifications**: flutter_local_notifications
-- **Storage**: shared_preferences
+- **Flutter**: Framework cross-platform
+- **Dart**: Ngôn ngữ lập trình
+- **Provider**: State management
+- **HTTP**: API communication
+- **Shared Preferences**: Local storage
+- **Local Notifications**: Push notifications
 
-## 📱 Cài đặt và chạy
+## 📋 Yêu cầu hệ thống
 
-### Yêu cầu hệ thống
+- **Flutter**: 3.0+
+- **Dart**: 2.19+
+- **Android**: API 21+ (Android 5.0+)
+- **iOS**: 11.0+
 
-- Flutter SDK (3.0.0+)
-- Android Studio hoặc VS Code
-- Device/Emulator Android/iOS
+## 🚀 Cài đặt & Chạy
 
 ### 1. Cài đặt Flutter
 
 ```bash
-# Kiểm tra Flutter đã cài đặt
-flutter doctor
+# Download Flutter SDK
+git clone https://github.com/flutter/flutter.git -b stable
 
-# Nếu chưa có, cài đặt từ: https://flutter.dev/docs/get-started/install
+# Add to PATH
+export PATH="$PATH:`pwd`/flutter/bin"
+
+# Verify installation
+flutter doctor
 ```
 
-### 2. Cài đặt dependencies
+### 2. Clone & Setup
 
 ```bash
-cd bizflow_mobile
+cd bizflow/mobile
 flutter pub get
 ```
 
 ### 3. Chạy ứng dụng
 
-**Android Emulator:**
+#### Android
 
 ```bash
 flutter run
 ```
 
-**iOS Simulator:**
+#### iOS (macOS only)
 
 ```bash
-flutter run --device-id $(flutter devices | grep "iOS" | head -1 | awk '{print $4}')
+flutter run
 ```
 
-**Device cụ thể:**
+#### Web (for testing)
 
 ```bash
-flutter devices  # Xem danh sách devices
-flutter run -d <device_id>
+flutter run -d chrome
 ```
 
-## 🔧 Cấu hình
+## 🔧 Cấu hình API
 
-### API Endpoint
-
-Mặc định kết nối đến: `http://10.0.2.2:5000` (Android emulator localhost)
-
-Để thay đổi, chỉnh sửa trong `lib/services/auth_service.dart`:
+Ứng dụng kết nối với backend API Flask. Cấu hình trong `lib/services/auth_service.dart`:
 
 ```dart
-static const String baseUrl = 'http://your-api-url:port';
+static const String baseUrl = 'http://10.0.2.2:9999'; // Android emulator
+// static const String baseUrl = 'http://localhost:9999'; // iOS simulator
+// static const String baseUrl = 'http://YOUR_IP:9999'; // Physical device
 ```
 
-### Permissions
+## 📱 Screenshots
 
-Ứng dụng yêu cầu quyền:
+### Login Screen
 
-- Internet access
-- Notification (Android/iOS)
+Màn hình đăng nhập với giao diện thân thiện
 
-## 📊 Cấu trúc dự án
+### Dashboard
+
+Dashboard chính với thống kê và danh sách đơn hàng
+
+### Order Management
+
+Quản lý đơn hàng với chi tiết đầy đủ
+
+## 🏗️ Cấu trúc Project
 
 ```
-bizflow_mobile/
-├── lib/
-│   ├── models/          # Data models
-│   ├── providers/       # State management
-│   ├── screens/         # UI screens
-│   ├── services/        # API calls & utilities
-│   ├── widgets/         # Reusable widgets
-│   └── main.dart        # App entry point
-├── pubspec.yaml         # Dependencies
-└── README.md
+lib/
+├── main.dart                 # Entry point
+├── models/
+│   └── user.dart            # User model
+├── providers/
+│   ├── auth_provider.dart   # Authentication state
+│   └── order_provider.dart  # Order management
+├── screens/
+│   ├── login_screen.dart    # Login page
+│   └── dashboard_screen.dart # Main dashboard
+├── services/
+│   ├── auth_service.dart    # API calls for auth
+│   └── notification_service.dart # Push notifications
+└── widgets/                 # Reusable UI components
 ```
 
-## 🎯 Demo Accounts
+## 🔐 API Endpoints
 
-- **Employee**: username: `employee`, password: `demo123`
-- **Owner**: username: `owner`, password: `demo123`
+### Authentication
 
-## 🔄 Development Status
+- `POST /api/auth/login` - Đăng nhập
+- `POST /api/auth/register` - Đăng ký
+- `POST /api/auth/logout` - Đăng xuất
 
-- ✅ **Authentication**: Login/logout với API
-- ✅ **Dashboard**: UI cơ bản với thống kê
-- ✅ **Notifications**: Hỗ trợ push notifications
-- 🔄 **Orders**: Đang phát triển
-- 🔄 **AI Features**: Đang phát triển
-- 🔄 **Offline Mode**: Đang phát triển
+### Orders
 
-## 🚀 Build Release
+- `GET /api/orders` - Lấy danh sách đơn hàng
+- `POST /api/orders` - Tạo đơn hàng mới
+- `PUT /api/orders/:id` - Cập nhật đơn hàng
+- `DELETE /api/orders/:id` - Xóa đơn hàng
+
+## 🐛 Xử lý lỗi
+
+### Network Issues
+
+- Kiểm tra kết nối internet
+- Verify API server đang chạy
+- Check IP address trong auth_service.dart
+
+### Authentication Issues
+
+- Đảm bảo backend đang chạy trên port 9999
+- Kiểm tra credentials
+- Clear app data nếu cần
+
+## 🚀 Build Production
 
 ### Android APK
 
@@ -136,24 +173,11 @@ flutter build apk --release
 flutter build ios --release
 ```
 
-## 🐛 Troubleshooting
-
-### Flutter issues
+### Web
 
 ```bash
-flutter clean
-flutter pub get
-flutter run
+flutter build web --release
 ```
-
-### Android emulator network
-
-- Sử dụng `10.0.2.2` cho localhost từ Android emulator
-- Sử dụng `192.168.x.x` cho physical device
-
-### iOS permissions
-
-- Cần cấu hình notification permissions trong iOS
 
 ## 🤝 Đóng góp
 
@@ -162,6 +186,10 @@ flutter run
 3. Commit changes
 4. Push và tạo Pull Request
 
+## 📄 License
+
+MIT License - Xem LICENSE file
+
 ---
 
-_Tính năng đang được phát triển. Một số features có thể chưa hoạt động đầy đủ._
+**BizFlow Mobile** - Quản lý kinh doanh mọi lúc mọi nơi! 📱

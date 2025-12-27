@@ -1,44 +1,67 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import '../models/user.dart';
 
 class AuthService {
-  static const String baseUrl = 'http://10.0.2.2:5000'; // Android emulator localhost
+  static const String baseUrl = 'http://10.0.2.2:9999'; // Android emulator localhost
 
-  static Future<User> login(String username, String password) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/auth/login'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': username,
-        'password': password,
-      }),
-    );
+  Future<Map<String, dynamic>> login(String username, String password) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/login'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode({
+          'username': username,
+          'password': password,
+        }),
+      );
 
-    if (response.statusCode == 200) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data['user']);
-    } else {
-      throw Exception('Đăng nhập thất bại');
+      if (response.statusCode == 200) {
+        final data = jsonDecode(response.body);
+        return {
+          'success': true,
+          'token': data['token'],
+          'user': data['user'],
+        };
+      } else {
+        return {
+          'success': false,
+          'message': 'Invalid credentials',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Network error: $e',
+      };
     }
   }
 
-  static Future<User> register(String username, String password, String name) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/api/auth/register'),
-      headers: {'Content-Type': 'application/json'},
-      body: jsonEncode({
-        'username': username,
-        'password': password,
-        'name': name,
-      }),
-    );
+  Future<Map<String, dynamic>> register(Map<String, dynamic> userData) async {
+    try {
+      final response = await http.post(
+        Uri.parse('$baseUrl/api/auth/register'),
+        headers: {'Content-Type': 'application/json'},
+        body: jsonEncode(userData),
+      );
 
-    if (response.statusCode == 201) {
-      final data = jsonDecode(response.body);
-      return User.fromJson(data['user']);
-    } else {
-      throw Exception('Đăng ký thất bại');
+      if (response.statusCode == 201) {
+        final data = jsonDecode(response.body);
+        return {
+          'success': true,
+          'user_id': data['user_id'],
+        };
+      } else {
+        final data = jsonDecode(response.body);
+        return {
+          'success': false,
+          'message': data['error'] ?? 'Registration failed',
+        };
+      }
+    } catch (e) {
+      return {
+        'success': false,
+        'message': 'Network error: $e',
+      };
     }
   }
 }

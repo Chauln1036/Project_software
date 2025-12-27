@@ -1,22 +1,20 @@
-enum UserRole { employee, owner, admin }
-
 class User {
-  final int? id;
+  final int id;
   final String username;
-  final String? name;
+  final String name;
+  final String role;
+  final int? businessId;
   final String? phone;
   final String? email;
-  final UserRole? role;
-  final int? businessId;
 
   User({
-    this.id,
+    required this.id,
     required this.username,
-    this.name,
+    required this.name,
+    required this.role,
+    this.businessId,
     this.phone,
     this.email,
-    this.role,
-    this.businessId,
   });
 
   factory User.fromJson(Map<String, dynamic> json) {
@@ -24,12 +22,10 @@ class User {
       id: json['id'],
       username: json['username'],
       name: json['name'],
+      role: json['role'],
+      businessId: json['business_id'],
       phone: json['phone'],
       email: json['email'],
-      role: json['role'] != null ? UserRole.values.firstWhere(
-        (e) => e.toString().split('.').last == json['role']
-      ) : null,
-      businessId: json['business_id'],
     );
   }
 
@@ -38,10 +34,10 @@ class User {
       'id': id,
       'username': username,
       'name': name,
+      'role': role,
+      'business_id': businessId,
       'phone': phone,
       'email': email,
-      'role': role?.toString().split('.').last,
-      'business_id': businessId,
     };
   }
 }
