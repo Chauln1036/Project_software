@@ -1,48 +1,48 @@
 import 'package:flutter/material.dart';
-import '../services/order_service.dart';
+import '../services/customer_service.dart';
 
-class OrderProvider with ChangeNotifier {
-  List<Map<String, dynamic>> _orders = [];
+class CustomerProvider with ChangeNotifier {
+  List<Map<String, dynamic>> _customers = [];
   bool _isLoading = false;
   String? _errorMessage;
 
-  List<Map<String, dynamic>> get orders => _orders;
+  List<Map<String, dynamic>> get customers => _customers;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  final OrderService _orderService = OrderService();
+  final CustomerService _customerService = CustomerService();
 
-  Future<void> loadOrders(int businessId, String token) async {
+  Future<void> loadCustomers(int businessId, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.getOrders(businessId, token);
+      final result = await _customerService.getCustomers(businessId, token);
       if (result['success']) {
-        _orders = List<Map<String, dynamic>>.from(result['orders']);
+        _customers = List<Map<String, dynamic>>.from(result['customers']);
       } else {
         _errorMessage = result['message'];
       }
     } catch (e) {
-      _errorMessage = 'Failed to load orders: $e';
+      _errorMessage = 'Failed to load customers: $e';
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<bool> createOrder(Map<String, dynamic> orderData, String token) async {
+  Future<bool> createCustomer(Map<String, dynamic> customerData, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.createOrder(orderData, token);
+      final result = await _customerService.createCustomer(customerData, token);
       if (result['success']) {
-        // Reload orders after creating new one
-        if (orderData.containsKey('business_id')) {
-          await loadOrders(orderData['business_id'], token);
+        // Reload customers after creating new one
+        if (customerData.containsKey('business_id')) {
+          await loadCustomers(customerData['business_id'], token);
         }
         _isLoading = false;
         notifyListeners();
@@ -54,24 +54,24 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to create order: $e';
+      _errorMessage = 'Failed to create customer: $e';
       _isLoading = false;
       notifyListeners();
       return false;
     }
   }
 
-  Future<bool> updateOrder(int orderId, Map<String, dynamic> orderData, String token) async {
+  Future<bool> updateCustomer(int customerId, Map<String, dynamic> customerData, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.updateOrder(orderId, orderData, token);
+      final result = await _customerService.updateCustomer(customerId, customerData, token);
       if (result['success']) {
-        // Reload orders after updating
-        if (orderData.containsKey('business_id')) {
-          await loadOrders(orderData['business_id'], token);
+        // Reload customers after updating
+        if (customerData.containsKey('business_id')) {
+          await loadCustomers(customerData['business_id'], token);
         }
         _isLoading = false;
         notifyListeners();
@@ -83,23 +83,23 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to update order: $e';
+      _errorMessage = 'Failed to update customer: $e';
       _isLoading = false;
       notifyListeners();
       return false;
     }
   }
 
-  Future<bool> deleteOrder(int orderId, int businessId, String token) async {
+  Future<bool> deleteCustomer(int customerId, int businessId, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.deleteOrder(orderId, token);
+      final result = await _customerService.deleteCustomer(customerId, token);
       if (result['success']) {
-        // Reload orders after deleting
-        await loadOrders(businessId, token);
+        // Reload customers after deleting
+        await loadCustomers(businessId, token);
         _isLoading = false;
         notifyListeners();
         return true;
@@ -110,7 +110,7 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to delete order: $e';
+      _errorMessage = 'Failed to delete customer: $e';
       _isLoading = false;
       notifyListeners();
       return false;

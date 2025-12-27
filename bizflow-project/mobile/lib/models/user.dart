@@ -1,7 +1,7 @@
 class User {
   final int id;
   final String username;
-  final String name;
+  final String? name;
   final String role;
   final int? businessId;
   final String? phone;
@@ -10,7 +10,7 @@ class User {
   User({
     required this.id,
     required this.username,
-    required this.name,
+    this.name,
     required this.role,
     this.businessId,
     this.phone,

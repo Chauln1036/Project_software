@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 class AuthService {
-  static const String baseUrl = 'http://10.0.2.2:9999'; // Android emulator localhost
+  static const String baseUrl = 'http://10.0.2.2:9999';
 
   Future<Map<String, dynamic>> login(String username, String password) async {
     try {
@@ -17,15 +17,23 @@ class AuthService {
 
       if (response.statusCode == 200) {
         final data = jsonDecode(response.body);
-        return {
-          'success': true,
-          'token': data['token'],
-          'user': data['user'],
-        };
+        if (data.containsKey('token')) {
+          return {
+            'success': true,
+            'token': data['token'],
+            'user': data['user'],
+          };
+        } else {
+          return {
+            'success': false,
+            'message': data['error'] ?? 'Login failed',
+          };
+        }
       } else {
+        final data = jsonDecode(response.body);
         return {
           'success': false,
-          'message': 'Invalid credentials',
+          'message': data['error'] ?? 'Invalid credentials',
         };
       }
     } catch (e) {

@@ -7,10 +7,11 @@ export const login = async (
   try {
     const response = await apiService.login({ username, password });
     const user = response.user;
+    const token = response.token;
 
-    // Store user data in localStorage
+    // Store user data and JWT token in localStorage
     localStorage.setItem("user", JSON.stringify(user));
-    localStorage.setItem("authToken", "authenticated");
+    localStorage.setItem("authToken", token);
 
     return user;
   } catch (error) {

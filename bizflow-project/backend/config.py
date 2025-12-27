@@ -5,6 +5,9 @@ import os
 class Config:
     """Base configuration."""
     SECRET_KEY = os.environ.get('SECRET_KEY') or 'a_default_secret_key'
+    # Ensure SECRET_KEY is always a string
+    if isinstance(SECRET_KEY, bytes):
+        SECRET_KEY = SECRET_KEY.decode('utf-8')
     DEBUG = os.environ.get('DEBUG', 'False').lower() in ['true', '1']
     TESTING = os.environ.get('TESTING', 'False').lower() in ['true', '1']
     # Force MySQL for BizFlow, ignore .env DATABASE_URI if it's for SQL Server

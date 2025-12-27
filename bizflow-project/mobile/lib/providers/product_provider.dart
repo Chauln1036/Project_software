@@ -1,48 +1,48 @@
 import 'package:flutter/material.dart';
-import '../services/order_service.dart';
+import '../services/product_service.dart';
 
-class OrderProvider with ChangeNotifier {
-  List<Map<String, dynamic>> _orders = [];
+class ProductProvider with ChangeNotifier {
+  List<Map<String, dynamic>> _products = [];
   bool _isLoading = false;
   String? _errorMessage;
 
-  List<Map<String, dynamic>> get orders => _orders;
+  List<Map<String, dynamic>> get products => _products;
   bool get isLoading => _isLoading;
   String? get errorMessage => _errorMessage;
 
-  final OrderService _orderService = OrderService();
+  final ProductService _productService = ProductService();
 
-  Future<void> loadOrders(int businessId, String token) async {
+  Future<void> loadProducts(int businessId, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.getOrders(businessId, token);
+      final result = await _productService.getProducts(businessId, token);
       if (result['success']) {
-        _orders = List<Map<String, dynamic>>.from(result['orders']);
+        _products = List<Map<String, dynamic>>.from(result['products']);
       } else {
         _errorMessage = result['message'];
       }
     } catch (e) {
-      _errorMessage = 'Failed to load orders: $e';
+      _errorMessage = 'Failed to load products: $e';
     }
 
     _isLoading = false;
     notifyListeners();
   }
 
-  Future<bool> createOrder(Map<String, dynamic> orderData, String token) async {
+  Future<bool> createProduct(Map<String, dynamic> productData, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.createOrder(orderData, token);
+      final result = await _productService.createProduct(productData, token);
       if (result['success']) {
-        // Reload orders after creating new one
-        if (orderData.containsKey('business_id')) {
-          await loadOrders(orderData['business_id'], token);
+        // Reload products after creating new one
+        if (productData.containsKey('business_id')) {
+          await loadProducts(productData['business_id'], token);
         }
         _isLoading = false;
         notifyListeners();
@@ -54,24 +54,24 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to create order: $e';
+      _errorMessage = 'Failed to create product: $e';
       _isLoading = false;
       notifyListeners();
       return false;
     }
   }
 
-  Future<bool> updateOrder(int orderId, Map<String, dynamic> orderData, String token) async {
+  Future<bool> updateProduct(int productId, Map<String, dynamic> productData, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.updateOrder(orderId, orderData, token);
+      final result = await _productService.updateProduct(productId, productData, token);
       if (result['success']) {
-        // Reload orders after updating
-        if (orderData.containsKey('business_id')) {
-          await loadOrders(orderData['business_id'], token);
+        // Reload products after updating
+        if (productData.containsKey('business_id')) {
+          await loadProducts(productData['business_id'], token);
         }
         _isLoading = false;
         notifyListeners();
@@ -83,23 +83,23 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to update order: $e';
+      _errorMessage = 'Failed to update product: $e';
       _isLoading = false;
       notifyListeners();
       return false;
     }
   }
 
-  Future<bool> deleteOrder(int orderId, int businessId, String token) async {
+  Future<bool> deleteProduct(int productId, int businessId, String token) async {
     _isLoading = true;
     _errorMessage = null;
     notifyListeners();
 
     try {
-      final result = await _orderService.deleteOrder(orderId, token);
+      final result = await _productService.deleteProduct(productId, token);
       if (result['success']) {
-        // Reload orders after deleting
-        await loadOrders(businessId, token);
+        // Reload products after deleting
+        await loadProducts(businessId, token);
         _isLoading = false;
         notifyListeners();
         return true;
@@ -110,7 +110,7 @@ class OrderProvider with ChangeNotifier {
         return false;
       }
     } catch (e) {
-      _errorMessage = 'Failed to delete order: $e';
+      _errorMessage = 'Failed to delete product: $e';
       _isLoading = false;
       notifyListeners();
       return false;

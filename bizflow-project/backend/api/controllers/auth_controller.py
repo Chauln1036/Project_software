@@ -10,32 +10,61 @@ auth_bp = Blueprint('auth', __name__, url_prefix='/api/auth')
 
 @auth_bp.route('/login', methods=['POST'])
 def login():
-    data = request.get_json()
-    if not data or 'username' not in data or 'password' not in data:
-        return jsonify({'error': 'Username and password required'}), 400
+    try:
+        data = request.get_json()
+        if not data or 'username' not in data or 'password' not in data:
+            return jsonify({'error': 'Username and password required'}), 400
 
-    user = session.query(UserModel).filter_by(username=data['username']).first()
-    if not user or not bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8')):
-        return jsonify({'error': 'Invalid credentials'}), 401
+        print(f"Login attempt for user: {data['username']}")
 
-    payload = {
-        'user_id': user.id,
-        'username': user.username,
-        'role': user.role.value,
-        'business_id': user.business_id,
-        'exp': datetime.utcnow() + timedelta(hours=2)
-    }
-    token = jwt.encode(payload, current_app.config['SECRET_KEY'], algorithm='HS256')
-    return jsonify({
-        'token': token,
-        'user': {
-            'id': user.id,
+        user = session.query(UserModel).filter_by(username=data['username']).first()
+        if not user:
+            print(f"User not found: {data['username']}")
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        print(f"User found: {user.username}, checking password...")
+
+        # Check password
+        password_matches = bcrypt.checkpw(data['password'].encode('utf-8'), user.password.encode('utf-8'))
+        if not password_matches:
+            print(f"Password check failed for user: {data['username']}")
+            return jsonify({'error': 'Invalid credentials'}), 401
+
+        print(f"Password check passed for user: {data['username']}")
+
+        payload = {
+            'user_id': user.id,
             'username': user.username,
             'role': user.role.value,
             'business_id': user.business_id,
-            'name': user.name
+            'exp': (datetime.utcnow() + timedelta(hours=2)).timestamp()
         }
-    })
+
+        secret_key = str(current_app.config['SECRET_KEY'])
+        print(f"Secret key type: {type(secret_key)}, value: {secret_key[:10]}...")
+
+        token = jwt.encode(payload, secret_key, algorithm='HS256')
+        print(f"Login successful for user: {data['username']}")
+
+        # Ensure token is string for JSON response
+        if isinstance(token, bytes):
+            token = token.decode('utf-8')
+
+        return jsonify({
+            'token': token,
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'role': user.role.value,
+                'business_id': user.business_id,
+                'name': user.name
+            }
+        })
+    except Exception as e:
+        print(f"Login error: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        return jsonify({'error': 'Internal server error'}), 500
 
 @auth_bp.route('/register', methods=['POST'])
 def register():

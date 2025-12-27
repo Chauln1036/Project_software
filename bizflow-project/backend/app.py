@@ -1,7 +1,13 @@
 from flask import Flask, jsonify
 from api.swagger import spec
 from api.controllers.todo_controller import bp as todo_bp
-from api.controllers.bizflow import auth_bp
+from api.controllers.auth_controller import auth_bp as jwt_auth_bp
+from api.controllers.customer_controller import customer_bp
+from api.controllers.product_controller import product_bp
+from api.controllers.order_controller import order_bp
+from api.controllers.inventory_controller import inventory_bp
+from api.controllers.course_controller import bp as course_bp
+from api.controllers.reports_controller import reports_bp
 from api.middleware import middleware
 from api.responses import success_response
 from infrastructure.databases import init_db
@@ -21,7 +27,13 @@ def create_app():
     Swagger(app)
     # Đăng ký blueprint trước
     app.register_blueprint(todo_bp)
-    app.register_blueprint(auth_bp)  # BizFlow auth endpoints
+    app.register_blueprint(jwt_auth_bp)  # JWT auth endpoints
+    app.register_blueprint(customer_bp)
+    app.register_blueprint(product_bp)
+    app.register_blueprint(order_bp)
+    app.register_blueprint(inventory_bp)
+    app.register_blueprint(course_bp)
+    app.register_blueprint(reports_bp)
 
      # Thêm Swagger UI blueprint
     SWAGGER_URL = '/docs'

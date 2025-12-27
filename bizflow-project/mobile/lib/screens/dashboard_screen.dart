@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../providers/auth_provider.dart';
 import '../providers/order_provider.dart';
+import 'customers_screen.dart';
+import 'products_screen.dart';
+import 'create_order_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   @override
@@ -14,7 +17,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
     super.initState();
     // Load orders when screen opens
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      context.read<OrderProvider>().loadOrders();
+      final authProvider = context.read<AuthProvider>();
+      final orderProvider = context.read<OrderProvider>();
+
+      if (authProvider.user?.businessId != null && authProvider.token != null) {
+        orderProvider.loadOrders(authProvider.user!.businessId!, authProvider.token!);
+      }
     });
   }
 
@@ -26,15 +34,89 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text('BizFlow Dashboard'),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.logout),
-            onPressed: () async {
-              await authProvider.logout();
-              Navigator.pushReplacementNamed(context, '/login');
-            },
-          ),
-        ],
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              decoration: BoxDecoration(
+                color: Theme.of(context).primaryColor,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  CircleAvatar(
+                    child: Text((authProvider.user?.name ?? 'U')[0]),
+                    radius: 30,
+                  ),
+                  SizedBox(height: 10),
+                  Text(
+                    authProvider.user?.name ?? 'User',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Vai trò: ${authProvider.user?.role ?? 'Unknown'}',
+                    style: TextStyle(
+                      color: Colors.white70,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(Icons.dashboard),
+              title: Text('Dashboard'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.shopping_cart),
+              title: Text('Đơn hàng'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                // Already on dashboard
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.people),
+              title: Text('Khách hàng'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CustomersScreen()),
+                );
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.inventory),
+              title: Text('Sản phẩm'),
+              onTap: () {
+                Navigator.pop(context); // Close drawer
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => ProductsScreen()),
+                );
+              },
+            ),
+            Divider(),
+            ListTile(
+              leading: Icon(Icons.logout),
+              title: Text('Đăng xuất'),
+              onTap: () async {
+                Navigator.pop(context); // Close drawer
+                await authProvider.logout();
+                Navigator.pushReplacementNamed(context, '/login');
+              },
+            ),
+          ],
+        ),
       ),
       body: Column(
         children: [
@@ -45,7 +127,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
             child: Row(
               children: [
                 CircleAvatar(
-                  child: Text(authProvider.user?.name[0] ?? 'U'),
+                  child: Text((authProvider.user?.name ?? 'U')[0]),
                   radius: 24,
                 ),
                 SizedBox(width: 16),
@@ -115,7 +197,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             child: ListTile(
                               title: Text('Đơn hàng #${order['id']}'),
                               subtitle: Text(
-                                '${order['customer_name']} - ${order['created_at']}',
+                                'Khách hàng ID: ${order['customer_id']} - ${order['created_at']?.split('T')[0] ?? 'N/A'}',
                               ),
                               trailing: Column(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -148,9 +230,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          // TODO: Navigate to create order screen
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text('Tính năng tạo đơn hàng sẽ được thêm sau')),
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => CreateOrderScreen()),
           );
         },
         child: Icon(Icons.add),

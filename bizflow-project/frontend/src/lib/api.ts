@@ -15,6 +15,7 @@ export interface LoginRequest {
 }
 
 export interface LoginResponse {
+  token: string;
   user: User;
 }
 
@@ -32,11 +33,28 @@ export interface RegisterResponse {
 }
 
 class ApiService {
+  private getAuthHeaders(): { [key: string]: string } {
+    const token =
+      typeof window !== "undefined" ? localStorage.getItem("authToken") : null;
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  private getCurrentBusinessId(): number | null {
+    if (typeof window === "undefined") return null;
+    const user = localStorage.getItem("user");
+    if (user) {
+      const userData = JSON.parse(user);
+      return userData.business_id || null;
+    }
+    return null;
+  }
+
   private async request(endpoint: string, options: RequestInit = {}) {
     const url = `${API_BASE_URL}${endpoint}`;
     const config: RequestInit = {
       headers: {
         "Content-Type": "application/json",
+        ...this.getAuthHeaders(),
         ...options.headers,
       },
       ...options,
@@ -74,96 +92,103 @@ class ApiService {
     });
   }
 
-  // Products - return mock data
+  // Products
   async getProducts() {
-    return {
-      data: [
-        {
-          id: 1,
-          name: "Xi măng Portland PC30",
-          price: 95000,
-          unit: "bao",
-          category: "Xi măng",
-          stock: 150,
-        },
-        {
-          id: 2,
-          name: "Gạch đỏ 220x105x60mm",
-          price: 1200,
-          unit: "viên",
-          category: "Gạch",
-          stock: 2000,
-        },
-      ],
-    };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const products = await this.request(
+      `/api/products/?business_id=${businessId}`
+    );
+    return { data: products };
   }
 
   async createProduct(product: any) {
-    return { message: "Product created", id: Date.now() };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const productData = { ...product, business_id: businessId };
+    return this.request("/api/products/", {
+      method: "POST",
+      body: JSON.stringify(productData),
+    });
   }
 
-  // Orders - return mock data
+  // Orders
   async getOrders() {
-    return {
-      data: [
-        {
-          id: 1,
-          orderNumber: "DH-20241226-001",
-          customerName: "Khách hàng A",
-          total: 2850000,
-          status: "completed",
-          createdAt: new Date().toISOString(),
-        },
-      ],
-    };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const orders = await this.request(`/api/orders/?business_id=${businessId}`);
+    return { data: orders };
   }
 
   async createOrder(order: any) {
-    return { message: "Order created", orderId: Date.now() };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+    const orderData = {
+      ...order,
+      business_id: businessId,
+      employee_id: user.id,
+    };
+    return this.request("/api/orders/", {
+      method: "POST",
+      body: JSON.stringify(orderData),
+    });
   }
 
-  // Customers - return mock data
+  // Customers
   async getCustomers() {
-    return {
-      data: [
-        {
-          id: 1,
-          name: "Công ty TNHH Xây dựng ABC",
-          phone: "02812345678",
-          totalPurchases: 15000000,
-        },
-      ],
-    };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const customers = await this.request(
+      `/api/customers/?business_id=${businessId}`
+    );
+    return { data: customers };
   }
 
   async createCustomer(customer: any) {
-    return { message: "Customer created", id: Date.now() };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const customerData = { ...customer, business_id: businessId };
+    return this.request("/api/customers/", {
+      method: "POST",
+      body: JSON.stringify(customerData),
+    });
   }
 
-  // Inventory - return mock data
+  // Inventory
   async getInventory() {
-    return {
-      data: [
-        {
-          productId: 1,
-          productName: "Xi măng Portland PC30",
-          quantity: 150,
-          minStock: 20,
-        },
-      ],
-    };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const inventory = await this.request(
+      `/api/inventory/?business_id=${businessId}`
+    );
+    return { data: inventory };
   }
 
-  // Reports - return mock data
+  // Reports
   async getReports() {
-    return {
-      data: {
-        totalRevenue: 50000000,
-        totalOrders: 25,
-        totalProducts: 15,
-        totalCustomers: 8,
-      },
-    };
+    const businessId = this.getCurrentBusinessId();
+    if (!businessId) {
+      throw new Error("No business ID found");
+    }
+    const reports = await this.request(
+      `/api/reports/summary?business_id=${businessId}`
+    );
+    return { data: reports };
   }
 }
 

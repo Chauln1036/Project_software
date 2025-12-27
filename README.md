@@ -1,244 +1,98 @@
-# BizFlow - Hệ Thống Quản Lý Kinh Doanh
+# BizFlow - Ứng dụng quản lý kinh doanh Android
 
-Một nền tảng quản lý kinh doanh toàn diện được xây dựng cho các hộ kinh doanh nhỏ tại Việt Nam, giúp số hóa và tối ưu hóa hoạt động kinh doanh vật liệu xây dựng.
+BizFlow là ứng dụng di động Android giúp quản lý kinh doanh một cách thông minh và hiệu quả.
 
-## 🌟 Tính Năng Chính
+## 🚀 Tính năng chính
 
-### 👤 Quản Lý Người Dùng
+- **Quản lý khách hàng**: Thêm, sửa, xóa thông tin khách hàng
+- **Quản lý sản phẩm**: Theo dõi tồn kho và thông tin sản phẩm
+- **Quản lý đơn hàng**: Tạo và theo dõi đơn hàng
+- **Dashboard**: Xem tổng quan doanh nghiệp
+- **Đa vai trò**: Admin, Chủ doanh nghiệp, Nhân viên
 
-- **3 Vai Trò**: Admin (quản trị hệ thống), Owner (chủ cửa hàng), Employee (nhân viên)
-- **Xác Thực**: Đăng nhập an toàn với JWT
-- **Phân Quyền**: Kiểm soát truy cập theo vai trò
+## 📱 Yêu cầu hệ thống
 
-### 🏪 Quản Lý Cửa Hàng
+- **Android Studio** (phiên bản mới nhất)
+- **Flutter SDK** 3.10+
+- **Java JDK** 11+
+- **Docker** (cho database)
+- **Python** 3.8+ (cho backend)
 
-- **Thông Tin Doanh Nghiệp**: Quản lý thông tin cửa hàng
-- **Nhân Sự**: Quản lý nhân viên và quyền hạn
-- **Cài Đặt**: Tùy chỉnh hệ thống theo nhu cầu
+## 🛠️ Cài đặt và chạy
 
-### 📦 Quản Lý Sản Phẩm
-
-- **Danh Mục Sản Phẩm**: Xi măng, gạch, cát đá, sắt thép, ống nước, sơn, công cụ
-- **Quản Lý Tồn Kho**: Theo dõi số lượng, cảnh báo hết hàng
-- **Định Giá**: Quản lý giá bán, đơn vị tính
-
-### 🛒 Quản Lý Đơn Hàng
-
-- **Tạo Đơn Hàng**: Giao diện tạo đơn nhanh
-- **Theo Dõi Trạng Thái**: Pending → Confirmed → Completed
-- **Lịch Sử Đơn Hàng**: Tra cứu và quản lý lịch sử
-- **Khách Hàng**: Quản lý thông tin khách hàng và công nợ
-
-### 📊 Báo Cáo & Thống Kê
-
-- **Doanh Thu**: Theo dõi doanh thu theo thời gian
-- **Sản Phẩm Bán Chạy**: Phân tích sản phẩm hot
-- **Khách Hàng**: Thống kê khách hàng tiềm năng
-- **Tồn Kho**: Báo cáo tồn kho và nhập xuất
-
-## 🛠 Công Nghệ Sử Dung
-
-### Frontend
-
-- **Next.js 14**: React framework với App Router
-- **TypeScript**: Type safety toàn diện
-- **Tailwind CSS**: Utility-first CSS framework
-- **ESLint**: Code quality & consistency
-
-### Backend
-
-- **Flask**: Python web framework
-- **Clean Architecture**: Kiến trúc sạch, dễ maintain
-- **SQLAlchemy**: ORM cho database
-- **JWT**: Authentication & authorization
-
-### Database
-
-- **SQLite**: Primary database (development)
-- **MySQL/PostgreSQL**: Production databases
-- **Docker**: Containerized database services
-
-## 📋 Yêu Cầu Hệ Thống
-
-- **Node.js**: 18.17+
-- **Python**: 3.8+
-- **Docker**: Latest version (optional)
-- **Git**: Latest version
-
-## 🚀 Cài Đặt & Chạy
-
-### 1. Chuẩn Bị Môi Trường
+### 1. Clone repository
 
 ```bash
-# Clone project
-git clone <repository-url>
-cd project_bizflow
+git clone https://github.com/Chauln1036/Project_software.git
+cd project_bizflow/bizflow-project
 ```
 
-### 2. Cấu Hình Database
-
-**Quan trọng:** BizFlow yêu cầu cấu hình database rõ ràng.
+### 2. Khởi động Database
 
 ```bash
-# Chạy setup script để chọn loại database
-cd bizflow-project
-python setup.py
+# Đảm bảo Docker Desktop đang chạy
+docker-compose -f docker/docker-compose.yml up -d
 ```
 
-**Lựa chọn:**
-
-- SQLite (đơn giản nhất - khuyến nghị)
-- MySQL/PostgreSQL với Docker
-- MySQL/PostgreSQL local
-
-### 3. Khởi Động Database (nếu dùng Docker)
+### 3. Cài đặt Backend
 
 ```bash
-cd bizflow-project/docker
-docker-compose up -d
+cd backend
+pip install -r requirements.txt
+python setup.py  # Tạo database và demo data
+python app.py    # Chạy backend server
 ```
 
-### 4. Chạy Backend API
+### 4. Cài đặt Mobile App (Android)
 
 ```bash
-cd bizflow-project/backend
-python app.py
+cd mobile
+flutter pub get
+flutter run android  # Chạy trên thiết bị Android
 ```
 
-**API chạy tại:** http://localhost:9999
+## 👤 Tài khoản demo
 
-### 5. Chạy Frontend Web
+| Username     | Password  | Vai trò          |
+| ------------ | --------- | ---------------- |
+| `admin`      | `demo123` | Administrator    |
+| `nguyenvana` | `demo123` | Chủ doanh nghiệp |
+| `hoangd`     | `demo123` | Nhân viên        |
 
-```bash
-cd bizflow-project/frontend
-npm install
-npm run dev
-```
+## 📋 API Endpoints
 
-**Web app chạy tại:** http://localhost:3000
+- `POST /api/auth/login` - Đăng nhập
+- `GET /api/customers/?business_id=1` - Danh sách khách hàng
+- `GET /api/products/?business_id=1` - Danh sách sản phẩm
+- `GET /api/orders/?business_id=1` - Danh sách đơn hàng
 
-## 🔐 Tài Khoản Demo
-
-Sau khi setup xong, sử dụng tài khoản sau để đăng nhập:
-
-| Username   | Password | Vai Trò        |
-| ---------- | -------- | -------------- |
-| admin      | demo123  | Administrator  |
-| nguyenvana | demo123  | Business Owner |
-| hoangd     | demo123  | Employee       |
-
-## 📖 API Documentation
-
-### Authentication
-
-```
-POST /api/auth/login
-POST /api/auth/register
-POST /api/auth/logout
-```
-
-### Products
-
-```
-GET  /api/products
-POST /api/products
-PUT  /api/products/:id
-DELETE /api/products/:id
-```
-
-### Orders
-
-```
-GET  /api/orders
-POST /api/orders
-PUT  /api/orders/:id
-DELETE /api/orders/:id
-```
-
-### Employees
-
-```
-GET  /api/employees
-POST /api/employees
-PUT  /api/employees/:id
-DELETE /api/employees/:id
-```
-
-## 🗄️ Database Schema
-
-### Core Tables
-
-- `users`: Thông tin người dùng & authentication
-- `business`: Thông tin doanh nghiệp
-- `products`: Danh mục sản phẩm
-- `orders`: Đơn hàng
-- `order_items`: Chi tiết đơn hàng
-- `customers`: Thông tin khách hàng
-- `employees`: Quản lý nhân sự
-
-## 🔧 Development
-
-### Project Structure
+## 🏗️ Kiến trúc
 
 ```
 bizflow-project/
-├── backend/                    # Flask REST API
-│   ├── app.py                 # Main Flask application
-│   ├── config.py              # Database & environment config
-│   ├── api/                   # API routes & controllers
-│   ├── domain/                # Business logic & models
-│   └── infrastructure/        # Database & external services
-├── frontend/                  # Next.js Web Application
-│   ├── src/
-│   │   ├── app/              # Next.js App Router
-│   │   ├── components/       # React components
-│   │   ├── lib/              # Utilities & API client
-│   │   └── types/            # TypeScript definitions
-│   └── package.json
-├── mobile/                    # Flutter Mobile App
-└── docker/                    # Infrastructure & Databases
+├── backend/          # Python Flask API
+├── mobile/           # Flutter Android App
+└── docker/           # Database Docker setup
 ```
 
-### Build Commands
+## 📱 Screenshots
 
-```bash
-# Frontend build check
-cd bizflow-project/frontend
-npm run build
+(Sẽ cập nhật ảnh chụp màn hình)
 
-# Backend test
-cd bizflow-project/backend
-python -c "from config import Config; print('Config OK')"
-```
-
-## 🚀 Production Deployment
-
-### Docker Deployment
-
-```bash
-# Build & run toàn bộ hệ thống
-cd bizflow-project/docker
-docker-compose -f docker-compose.prod.yml up -d
-```
-
-### Manual Deployment
-
-1. **Database**: Chạy MySQL/PostgreSQL server
-2. **Backend**: Deploy Flask app với Gunicorn
-3. **Frontend**: Build Next.js và serve static files
-
-## 🤝 Đóng Góp
+## 🤝 Đóng góp
 
 1. Fork project
-2. Tạo feature branch: `git checkout -b feature/TinhNangMoi`
-3. Commit changes: `git commit -m 'Thêm tính năng mới'`
-4. Push to branch: `git push origin feature/TinhNangMoi`
+2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
+3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to branch (`git push origin feature/AmazingFeature`)
 5. Tạo Pull Request
 
-## 📄 Giấy Phép
+## 📄 License
 
-Dự án này được phân phối dưới giấy phép MIT.
+Distributed under the MIT License. See `LICENSE` for more information.
 
----
+## 📞 Liên hệ
 
-**BizFlow** - Giải pháp số hóa cho hộ kinh doanh Việt Nam! 🇻🇳 🚀
+Châu Long - chau.long@example.com
+
+Project Link: [https://github.com/Chauln1036/Project_software](https://github.com/Chauln1036/Project_software)

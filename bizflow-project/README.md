@@ -1,300 +1,109 @@
-# BizFlow - Fullstack Business Management System
+# BizFlow Project
 
-Một hệ thống quản lý doanh nghiệp toàn diện với giao diện web hiện đại và ứng dụng di động.
+Dự án BizFlow - Hệ thống quản lý kinh doanh với ứng dụng Android và backend API.
 
-## 🏗️ Kiến trúc
+## 🏗️ Tổng quan kiến trúc
 
 ```
 bizflow-project/
-├── backend/                # Flask REST API
-│   ├── app.py             # Main Flask app
-│   ├── config.py          # Database & app config
-│   ├── requirements.txt   # Python dependencies
-│   ├── api/               # API routes & controllers
-│   ├── domain/            # Business logic & models
-│   ├── infrastructure/    # Database & external services
-│   └── services/          # Business services
-├── frontend/              # Next.js Web Application
-│   ├── src/
-│   │   ├── app/          # Next.js App Router
-│   │   ├── components/   # React components
-│   │   ├── lib/          # Utilities & API client
-│   │   └── types/        # TypeScript types
-│   ├── package.json
-│   └── next.config.js
-├── mobile/                # Flutter Mobile App
-│   ├── lib/
-│   ├── pubspec.yaml
-│   └── README.md
-├── docker/                # Infrastructure & Databases
-│   ├── docker-compose.yml
-│   └── init-scripts/
-└── docs/                  # Documentation
+├── backend/          # Python Flask REST API
+│   ├── api/         # API controllers và routes
+│   ├── domain/      # Business logic
+│   ├── infrastructure/ # Database và external services
+│   └── requirements.txt
+├── mobile/          # Flutter Android App (chỉ Android)
+│   ├── android/     # Android native code
+│   ├── lib/         # Flutter Dart code
+│   └── pubspec.yaml
+└── docker/          # Database Docker setup
+    └── docker-compose.yml
 ```
 
-## 🚀 Cài đặt & Chạy
+## 🚀 Quick Start
 
-### 1. Chuẩn bị môi trường
-
-```bash
-# Clone project (sau khi tổ chức lại)
-cd bizflow-project
-
-# Cài đặt Python (nếu chưa có)
-# Download từ: https://python.org
-
-# Cài đặt Node.js (nếu chưa có)
-# Download từ: https://nodejs.org
-
-# Cài đặt Flutter (cho mobile app)
-# Download từ: https://flutter.dev
-```
-
-### 2. Cấu hình Database
-
-**Quan trọng:** BizFlow yêu cầu cấu hình database rõ ràng (giống production).
+### 1. Khởi động Database
 
 ```bash
-# Chạy setup script
-python setup.py
-```
-
-Setup sẽ hỏi bạn chọn loại database:
-
-- **SQLite**: Đơn giản nhất, file-based
-- **MySQL/PostgreSQL với Docker**: Professional
-- **MySQL/PostgreSQL local**: Nếu đã cài sẵn
-
-### 3. Khởi động Database (nếu dùng Docker)
-
-```bash
-# Nếu chọn MySQL/PostgreSQL Docker
 cd docker
 docker-compose up -d
 ```
 
-### 4. Chạy Backend API
+### 2. Chạy Backend
 
 ```bash
 cd backend
-
-# Cài đặt dependencies
 pip install -r requirements.txt
-
-# Chạy Flask server
+python setup.py
 python app.py
 ```
 
-Backend sẽ chạy tại: `http://localhost:9999`
-
-- API Docs: `http://localhost:9999/docs`
-- Swagger UI: `http://localhost:9999/docs/`
-
-### 5. Chạy Frontend Web
-
-```bash
-cd frontend
-
-# Cài đặt dependencies
-npm install
-
-# Chạy development server
-npm run dev
-```
-
-Frontend sẽ chạy tại: `http://localhost:3000`
-
-### 5. Chạy Mobile App (Optional)
+### 3. Chạy Mobile App (Android)
 
 ```bash
 cd mobile
-
-# Cài đặt dependencies
 flutter pub get
-
-# Chạy trên emulator/device
-flutter run
+flutter run android
 ```
 
-## 🔐 Tài khoản Demo
+## 📱 Demo Accounts
 
-Sau khi setup xong, sử dụng tài khoản sau để đăng nhập:
+| Username   | Password | Role     |
+| ---------- | -------- | -------- |
+| admin      | demo123  | Admin    |
+| nguyenvana | demo123  | Owner    |
+| hoangd     | demo123  | Employee |
 
-| Username | Password | Role           |
-| -------- | -------- | -------------- |
-| admin    | demo123  | Administrator  |
-| owner    | demo123  | Business Owner |
-| employee | demo123  | Employee       |
+## 📋 API Documentation
 
-## 📊 Tính năng
+Backend chạy trên `http://localhost:9999`
 
-### 🏪 Quản lý Cửa hàng
+- `POST /api/auth/login` - Đăng nhập
+- `GET /api/customers/?business_id=1` - Khách hàng
+- `GET /api/products/?business_id=1` - Sản phẩm
+- `GET /api/orders/?business_id=1` - Đơn hàng
 
-- Quản lý sản phẩm và tồn kho
-- Quản lý khách hàng và đơn hàng
-- Báo cáo doanh thu và lợi nhuận
+## 🛠️ Tech Stack
 
-### 👥 Quản lý Nhân sự
-
-- Hồ sơ nhân viên
-- Chấm công và nghỉ phép
-- Đánh giá hiệu suất
-- Quản lý dự án
-
-### 📱 Ứng dụng Di động
-
-- Giao diện thân thiện cho nhân viên
-- Theo dõi đơn hàng real-time
-- Quản lý ca làm việc
-
-## 🛠️ Công nghệ sử dụng
-
-### Backend
-
-- **Framework**: Flask (Python)
-- **Database**: MySQL/SQLite
+- **Backend**: Python Flask + SQLAlchemy + MySQL
+- **Mobile**: Flutter + Dart (Android only)
+- **Database**: MySQL 8.0 (Docker)
 - **Authentication**: JWT
-- **API**: RESTful
-- **Docs**: Swagger/OpenAPI
 
-### Frontend
+## 📱 Mobile App Features
 
-- **Framework**: Next.js 14 (React)
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS
-- **UI Components**: Radix UI
-- **State Management**: React Hooks
+- ✅ Đăng nhập với JWT
+- ✅ Dashboard với thống kê
+- ✅ Quản lý khách hàng (CRUD)
+- ✅ Xem sản phẩm và tồn kho
+- ✅ Tạo đơn hàng
+- ✅ Đa vai trò user
 
-### Mobile
+## 🔧 Development
 
-- **Framework**: Flutter (Dart)
-- **Platform**: iOS & Android
+### Prerequisites
 
-### Infrastructure
+- Python 3.8+
+- Flutter 3.10+
+- Android Studio
+- Docker Desktop
 
-- **Container**: Docker & Docker Compose
-- **Cache**: Redis
-- **Reverse Proxy**: Nginx (production)
+### Environment Setup
 
-## 🔄 API Endpoints
+1. Clone repo
+2. Start database: `docker-compose up -d`
+3. Install backend deps: `pip install -r backend/requirements.txt`
+4. Install mobile deps: `flutter pub get`
+5. Run backend: `python backend/app.py`
+6. Run mobile: `flutter run android`
 
-### Authentication
+## 🤝 Contributing
 
-```
-POST /api/auth/login
-POST /api/auth/register
-POST /api/auth/logout
-```
+1. Fork the Project
+2. Create your Feature Branch (`git checkout -b feature/AmazingFeature`)
+3. Commit your Changes (`git commit -m 'Add some AmazingFeature'`)
+4. Push to the Branch (`git push origin feature/AmazingFeature`)
+5. Open a Pull Request
 
-### Products
+## 📄 License
 
-```
-GET  /api/products
-POST /api/products
-PUT  /api/products/:id
-```
-
-### Orders
-
-```
-GET  /api/orders
-POST /api/orders
-PUT  /api/orders/:id
-```
-
-### Employees
-
-```
-GET  /api/employees
-POST /api/employees
-PUT  /api/employees/:id
-```
-
-## 🚢 Deployment
-
-### Production Setup
-
-1. **Environment Variables**:
-
-```bash
-# backend/.env
-DATABASE_URI=mysql+pymysql://user:pass@db:3306/bizflow_prod
-SECRET_KEY=your-secret-key
-DEBUG=False
-
-# frontend/.env.local
-NEXT_PUBLIC_API_URL=https://api.yourdomain.com
-```
-
-2. **Docker Production**:
-
-```bash
-# Build images
-docker build -t bizflow-backend ./backend
-docker build -t bizflow-frontend ./frontend
-
-# Run with docker-compose.prod.yml
-docker-compose -f docker/docker-compose.prod.yml up -d
-```
-
-3. **Reverse Proxy** (Nginx):
-
-```nginx
-server {
-    listen 80;
-    server_name yourdomain.com;
-
-    location / {
-        proxy_pass http://frontend:3000;
-    }
-
-    location /api {
-        proxy_pass http://backend:9999;
-    }
-}
-```
-
-## 📈 Roadmap
-
-### Phase 1 (Current) ✅
-
-- [x] Basic CRUD operations
-- [x] User authentication
-- [x] Web dashboard
-- [x] Database integration
-
-### Phase 2 (Next)
-
-- [ ] Mobile app completion
-- [ ] Real-time notifications
-- [ ] Advanced reporting
-- [ ] Multi-tenancy support
-
-### Phase 3 (Future)
-
-- [ ] AI-powered insights
-- [ ] IoT device integration
-- [ ] Multi-language support
-- [ ] Cloud deployment
-
-## 🤝 Đóng góp
-
-1. Fork project
-2. Tạo feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Tạo Pull Request
-
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 📞 Liên hệ
-
-- **Email**: contact@bizflow.vn
-- **Website**: https://bizflow.vn
-- **Issues**: [GitHub Issues](https://github.com/your-repo/issues)
-
----
-
-**BizFlow** - Giải pháp quản lý doanh nghiệp toàn diện cho tương lai! 🚀
+Distributed under the MIT License.
